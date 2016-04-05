@@ -24,7 +24,9 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   import Stream._
 
+  ////////////////////////
   behavior of "headOption"
+  ////////////////////////
 
   // a scenario test:
 
@@ -52,20 +54,16 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   }
 
-
+  //////////////////
   behavior of "take"
+  //////////////////
 
-  it should "s.take(n).take(n) == s.take(n) for any Stream s and any n (03)" in check {
+  it should "s.take(n).take(n) == s.take(n) for any Stream s and any n (06)" in check {
 
-    implicit def s = Arbitrary[Stream[Int]] (genNonEmptyStream[Int])
+    implicit def arbIntStream = Arbitrary[Stream[Int]] (genNonEmptyStream[Int])
 
-    val r = scala.util.Random
-    val n = r.nextInt
-
-    // I think sometimes is the stream not long enough and the random take(n) is too large
-
-    ("s.take(n).take(n) == s.take(n)" |:
-      Prop.forAll { (s :Stream[Int]) => s.take(n).take(n) == s.take(n) } )
+    ("idempotency" |: 
+      Prop.forAll { (s :Stream[Int], n:Int) => s.take(n).take(n).toList == s.take(n).toList } )
   }
 
 }
