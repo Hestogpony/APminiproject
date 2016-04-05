@@ -62,6 +62,8 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
     val r = scala.util.Random
     val n = r.nextInt
 
+    // I think sometimes is the stream not long enough and the random take(n) is too large
+
     ("s.take(n).take(n) == s.take(n)" |:
       Prop.forAll { (s :Stream[Int]) => s.take(n).take(n) == s.take(n) } )
   }
