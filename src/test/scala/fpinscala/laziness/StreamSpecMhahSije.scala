@@ -1,5 +1,6 @@
-// Advanced Programming
-// Andrzej Wasowski, IT University of Copenhagen
+// AUTHOR1: Martin Hahner - mhah@itu.dk
+// AUTHOR2: Simon Buus Jense - sije@itu.dk
+// Group number: 22
 
 package fpinscala.laziness
 import scala.language.higherKinds
@@ -19,7 +20,7 @@ import stream00._    // uncomment to test the book solution
 // import stream01._ // uncomment to test the broken headOption implementation
 // import stream02._ // uncomment to test another version that breaks headOption
 
-class StreamSpecWasowski extends FlatSpec with Checkers {
+class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   import Stream._
 
@@ -49,6 +50,20 @@ class StreamSpecWasowski extends FlatSpec with Checkers {
     ("random" |:
       Prop.forAll { (s :Stream[Int]) => s.headOption != None } )
 
+  }
+
+
+  behavior of "take"
+
+  it should "s.take(n).take(n) == s.take(n) for any Stream s and any n (03)" in check {
+
+    implicit def s = Arbitrary[Stream[Int]] (genNonEmptyStream[Int])
+
+    val r = scala.util.Random
+    val n = r.nextInt
+
+    ("s.take(n).take(n) == s.take(n)" |:
+      Prop.forAll { (s :Stream[Int]) => s.take(n).take(n) == s.take(n) } )
   }
 
 }
