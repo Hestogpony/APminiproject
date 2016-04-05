@@ -24,6 +24,12 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   import Stream._
 
+  // a few unused examples how to generate random things
+  val evenInteger = Arbitrary.arbitrary[Int] suchThat (_ % 2 == 0)
+
+  implicit lazy val arbBool: Arbitrary[Boolean] = Arbitrary(Gen.oneOf(true, false))
+
+
   ////////////////////////
   behavior of "headOption"
   ////////////////////////
@@ -84,5 +90,19 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
       (s :Stream[Int], m:Int, n:Int) => (s.drop(n).drop(m).toList == s.drop(n+m).toList) } )
     
   }
+
+
+  /////////////////
+  behavior of "map"
+  /////////////////
+
+  // TODO
+
+
+  ////////////////////
+  behavior of "append"
+  ////////////////////
+
+  // TODO
 
 }
