@@ -20,6 +20,7 @@ import stream00._    // uncomment to test the book solution
 // import stream01._ // uncomment to test the broken headOption implementation
 // import stream02._ // uncomment to test another version that breaks headOption
 
+
 class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   import Stream._
@@ -29,16 +30,6 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   implicit lazy val arbBool: Arbitrary[Boolean] = Arbitrary(Gen.oneOf(true, false))
 
-
-  ////////////////////////
-  behavior of "headOption"
-  ////////////////////////
-
-  // a scenario test:
-
-  it should "return None on an empty Stream (01)" in {
-    assert(empty.headOption == None)
-  }
 
   // An example generator of random finite non-empty streams
   def list2stream[A] (la :List[A]): Stream[A] = la.foldRight (empty[A]) (cons[A](_,_))
@@ -54,6 +45,17 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
       x <- Gen.choose(1, 100)
     } yield x
 
+
+  ////////////////////////
+  behavior of "headOption"
+  ////////////////////////
+
+  // a scenario test:
+
+  it should "return None on an empty Stream (01)" in {
+    assert(empty.headOption == None)
+  }
+  
   // a property test:
 
   it should "return the head of the stream packaged in Some (02)" in check {
@@ -64,6 +66,24 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
     ("random" |:
       Prop.forAll { (s :Stream[Int]) => s.headOption != None } )
 
+  }
+
+  it should "not force the tail of the stream (03)" in {
+    
+    implicit def arbIntStream = Arbitrary[Stream[Int]] (genNonEmptyStream[Int])
+
+    try { 
+
+      // just try to call headOption
+      (s :Stream[Int]) => s.headOption
+      // if no Exception is thrown, everything is fine
+     
+     } catch {
+     
+      // if there is anything thrown, then the tail was forced
+      case _ : Throwable => assert(empty.headOption == Some(1))
+     
+     }
   }
 
 
