@@ -42,6 +42,12 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
     for { la <- arbitrary[List[A]] suchThat (_.nonEmpty)}
     yield list2stream (la)
 
+  // generator of a random Int in the same manner
+  def genInt[Int]() =
+    for {
+      x <- Gen.choose(1, 100)
+    } yield x
+
   // a property test:
 
   it should "return the head of the stream packaged in Some (02)" in check {
@@ -54,6 +60,7 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   }
 
+
   //////////////////
   behavior of "take"
   //////////////////
@@ -64,6 +71,18 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
     ("idempotency" |: 
       Prop.forAll { (s :Stream[Int], n:Int) => s.take(n).take(n).toList == s.take(n).toList } )
+  }
+
+
+  //////////////////
+  behavior of "drop"
+  //////////////////
+
+  it should "s.drop(n).drop(m) == s.drop(n+m) for any n, m (07)" in check {
+
+    ("additivity" |: Prop.forAll(genNonEmptyStream[Int], genInt[Int], genInt[Int]) {
+      (s :Stream[Int], m:Int, n:Int) => (s.drop(n).drop(m).toList == s.drop(n+m).toList) } )
+    
   }
 
 }
