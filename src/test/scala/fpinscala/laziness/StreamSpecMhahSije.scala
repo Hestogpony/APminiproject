@@ -264,6 +264,15 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
   behavior of "append"
   ////////////////////
 
-  // TODO
+  // a property test:
+  
+  it should "satisfy x.append(empty) == x (12)" in check {
+
+    ("empty" |: Prop.forAll(genNonEmptyStream[Int]) {
+      (s :Stream[Int]) => (s.append(empty).toList == s.toList) } )
+    
+  }
+
+  // TODO: add more tests
 
 }

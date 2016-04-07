@@ -74,7 +74,7 @@ For map:
 - map terminates on infinite streams 								// done! (scenario)
 
 For append:
-- propose properties yourself
+- propose properties yourself										// almost done! :)
 
 I will test the effectiveness of your spec, by providing several
 broken and correct implementations for the above functions and
