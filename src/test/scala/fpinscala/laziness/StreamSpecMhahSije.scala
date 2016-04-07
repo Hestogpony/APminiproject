@@ -108,7 +108,7 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
      
      } catch {
      
-      // if there is anything thrown, then the tail was forced
+      // if there is anything thrown, then something was forced
       case _ : Throwable => assert(false)
      
      }
@@ -130,7 +130,7 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
      
      } catch {
      
-      // if there is anything thrown, then the tail was forced
+      // if there is anything thrown, then some element after the n'th was forced
       case _ : Throwable => assert(false)
      
      }
@@ -175,7 +175,7 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
      
      } catch {
      
-      // if there is anything thrown, then the tail was forced
+      // if there is anything thrown, then an element was forced
       case _ : Throwable => assert(false)
      
      }
@@ -200,7 +200,7 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
      
      } catch {
      
-      // if there is anything thrown, then the tail was forced
+      // if there is anything thrown, then an element was forced
       case _ : Throwable => assert(false)
      
      }
