@@ -11,6 +11,11 @@ import org.scalacheck._
 import org.scalacheck.Prop._
 import Arbitrary.arbitrary
 
+import concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
+import scala.language.postfixOps
+
 // If you comment out all the import lines below, then you test the Scala
 // Standard Library implementation of Streams. Interestingly, the standard
 // library streams are stricter than those from the book, so some laziness tests
@@ -232,7 +237,27 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
     
   }
 
-  // TODO
+  // a scenario test:
+
+  it should "terminate on infinite streams (11)" in {
+
+    val f = Future {Stream.from(0).map(x => x * 2)}
+    // val f = Future {Stream.from(0).toList}
+
+    try {
+      
+      // try this operation for one second
+      Await.result(f, 1 seconds);
+    
+    } catch {
+      
+      case _ : Throwable => assert(false)
+    
+    }
+
+    // unfortunately Java has to be forcefully killed after a failed test
+
+  }
 
 
   ////////////////////

@@ -71,7 +71,7 @@ For drop:
 
 For map:
 - x.map(id) == x (where id is the identity function)				// done! (property) I think
-- map terminates on infinite streams
+- map terminates on infinite streams 								// done! (scenario)
 
 For append:
 - propose properties yourself
