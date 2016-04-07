@@ -57,7 +57,7 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
   }
   
   // a property test:
-
+  
   it should "return the head of the stream packaged in Some (02)" in check {
     // the implict makes the generator available in the context
     implicit def arbIntStream = Arbitrary[Stream[Int]] (genNonEmptyStream[Int])
@@ -68,15 +68,16 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   }
 
-  // this is a scenario test
+  // a scenario test:
+
   it should "not force the tail of the stream (03)" in {
     
     val s = cons(0, cons(throw new RuntimeException("this has been forced"), empty))
 
     try { 
 
-      // just try to call headOption
       s.headOption
+      // just try to call headOption
       // if no Exception is thrown, everything is fine
      
      } catch {
@@ -92,6 +93,29 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
   behavior of "take"
   //////////////////
 
+  // a scenario test:
+
+    it should "not force any heads nor any tails of the Stream it manipulates (04)" in {
+    
+    val s = cons(throw new RuntimeException("this has been forced"), 
+            cons(throw new RuntimeException("this has been forced"), empty))
+
+    try { 
+
+      s.take(1)
+      // just try to call headOption
+      // if no Exception is thrown, everything is fine
+     
+     } catch {
+     
+      // if there is anything thrown, then the tail was forced
+      case _ : Throwable => assert(false)
+     
+     }
+  }
+
+  // a property test:
+
   it should "s.take(n).take(n) == s.take(n) for any Stream s and any n (06)" in check {
 
     implicit def arbIntStream = Arbitrary[Stream[Int]] (genNonEmptyStream[Int])
@@ -104,6 +128,8 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
   //////////////////
   behavior of "drop"
   //////////////////
+
+  // a property test:
 
   it should "s.drop(n).drop(m) == s.drop(n+m) for any n, m (07)" in check {
 

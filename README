@@ -57,7 +57,7 @@ For headOption:
 - headOption should not force the tail of the stream.				// done!
 
 For take:
-- take should not force any heads nor any tails of the Stream it
+- take should not force any heads nor any tails of the Stream it 	// done!
   manipulates
 - take(n) does not force (n+1)st head ever (even if we force all
   elements of take(n))
