@@ -156,7 +156,8 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
     "idempotency" |:
       Prop.forAll {
-        (s :Stream[Int], n:Int) => s.take(n).take(n).toList == s.take(n).toList }
+        (s :Stream[Int], n:Int) =>
+          s.take(n).take(n).toList == s.take(n).toList }
   }
 
 
@@ -166,11 +167,13 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   // a property test:
 
-  it should "satisfy s.drop(n).drop(m) == s.drop(n+m) for any n, m (07)" in check {
+  it should "satisfy s.drop(n).drop(m) == s.drop(n+m) " +
+    "for any n, m (07)" in check {
 
     "additivity" |:
       Prop.forAll(genNonEmptyStream[Int], genInt[Int](), genInt[Int]()) {
-      (s :Stream[Int], m:Int, n:Int) => s.drop(n).drop(m).toList == s.drop(n+m).toList }
+      (s :Stream[Int], m:Int, n:Int) =>
+        s.drop(n).drop(m).toList == s.drop(n+m).toList }
     
   }
 
@@ -197,7 +200,8 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   // a scenario test:
 
-  it should "(08) should hold even if we force some stuff in the tail (09)" in {
+  it should "(08) should hold even if " +
+    "we force some stuff in the tail (09)" in {
     
     val s = cons(throw new RuntimeException("this has been forced"), 
             cons(1,
