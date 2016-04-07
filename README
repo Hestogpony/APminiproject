@@ -50,23 +50,23 @@ another testing framework, etc.) More details on the format below.
 4. What properties to test?
 
 For headOption:
-- it should return None on an empty stream;  (already included in 	// done!
+- it should return None on an empty stream;  (already included in 	// done! (scenario)
   the examples)
-- it should return some for a non-empty stream;  (already included	// done!
+- it should return some for a non-empty stream;  (already included	// done! (property)
   in the examples)
-- headOption should not force the tail of the stream.				// done!
+- headOption should not force the tail of the stream.				// done! (scenario)
 
 For take:
-- take should not force any heads nor any tails of the Stream it 	// done!
+- take should not force any heads nor any tails of the Stream it 	// done! (scenario)
   manipulates
-- take(n) does not force (n+1)st head ever (even if we force all
+- take(n) does not force (n+1)st head ever (even if we force all 	// done! (scenario)
   elements of take(n))
-- s.take(n).take(n) == s.take(n) for any Stream s and any n 		// done!
+- s.take(n).take(n) == s.take(n) for any Stream s and any n 		// done! (property)
   (idempotency)
 
 For drop:
-- s.drop(n).drop(m) == s.drop(n+m) for any n, m (additivity)		// done!
-- s.drop(n) does not force any of the dropped elements heads		// done!
+- s.drop(n).drop(m) == s.drop(n+m) for any n, m (additivity)		// done! (property)
+- s.drop(n) does not force any of the dropped elements heads		// done! (scenario)
 - the above should hold even if we force some stuff in the tail
 
 For map:

@@ -114,6 +114,28 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
      }
   }
 
+  // a scenario test:
+
+  it should "not force (n+1)st head ever (05)" in {
+    
+    val s = cons(0,
+            cons(1,  
+            cons(throw new RuntimeException("this has been forced"), empty)))
+
+    try { 
+
+      s.take(2).toList
+      // just try to call take and force all its elements
+      // if no Exception is thrown, everything is fine
+     
+     } catch {
+     
+      // if there is anything thrown, then the tail was forced
+      case _ : Throwable => assert(false)
+     
+     }
+  }
+
   // a property test:
 
   it should "s.take(n).take(n) == s.take(n) for any Stream s and any n (06)" in check {
