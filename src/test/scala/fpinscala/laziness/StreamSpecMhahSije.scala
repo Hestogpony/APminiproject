@@ -103,7 +103,7 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
     try { 
 
       s.take(1)
-      // just try to call headOption
+      // just try to call take
       // if no Exception is thrown, everything is fine
      
      } catch {
@@ -136,6 +136,27 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
     ("additivity" |: Prop.forAll(genNonEmptyStream[Int], genInt[Int], genInt[Int]) {
       (s :Stream[Int], m:Int, n:Int) => (s.drop(n).drop(m).toList == s.drop(n+m).toList) } )
     
+  }
+
+  // a scenario test:
+
+  it should "not force any of the dropped elements heads (08)" in {
+    
+    val s = cons(throw new RuntimeException("this has been forced"), 
+            cons(throw new RuntimeException("this has been forced"), empty))
+
+    try { 
+
+      s.drop(1)
+      // just try to call drop
+      // if no Exception is thrown, everything is fine
+     
+     } catch {
+     
+      // if there is anything thrown, then the tail was forced
+      case _ : Throwable => assert(false)
+     
+     }
   }
 
 
