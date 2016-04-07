@@ -54,7 +54,7 @@ For headOption:
   the examples)
 - it should return some for a non-empty stream;  (already included	// done!
   in the examples)
-- headOption should not force the tail of the stream.				// not sure if OK
+- headOption should not force the tail of the stream.				// done!
 
 For take:
 - take should not force any heads nor any tails of the Stream it

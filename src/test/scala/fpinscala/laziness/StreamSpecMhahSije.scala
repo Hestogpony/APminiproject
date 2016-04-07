@@ -68,20 +68,21 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   }
 
+  // this is a scenario test
   it should "not force the tail of the stream (03)" in {
     
-    implicit def arbIntStream = Arbitrary[Stream[Int]] (genNonEmptyStream[Int])
+    val s = cons(0, cons(throw new RuntimeException("this has been forced"), empty))
 
     try { 
 
       // just try to call headOption
-      (s :Stream[Int]) => s.headOption
+      s.headOption
       // if no Exception is thrown, everything is fine
      
      } catch {
      
       // if there is anything thrown, then the tail was forced
-      case _ : Throwable => assert(empty.headOption == Some(1))
+      case _ : Throwable => assert(false)
      
      }
   }
