@@ -138,7 +138,7 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   // a property test:
 
-  it should "s.take(n).take(n) == s.take(n) for any Stream s and any n (06)" in check {
+  it should "satisfy s.take(n).take(n) == s.take(n) for any Stream s and any n (06)" in check {
 
     implicit def arbIntStream = Arbitrary[Stream[Int]] (genNonEmptyStream[Int])
 
@@ -153,7 +153,7 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   // a property test:
 
-  it should "s.drop(n).drop(m) == s.drop(n+m) for any n, m (07)" in check {
+  it should "satisfy s.drop(n).drop(m) == s.drop(n+m) for any n, m (07)" in check {
 
     ("additivity" |: Prop.forAll(genNonEmptyStream[Int], genInt[Int], genInt[Int]) {
       (s :Stream[Int], m:Int, n:Int) => (s.drop(n).drop(m).toList == s.drop(n+m).toList) } )
@@ -210,6 +210,27 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
   /////////////////
   behavior of "map"
   /////////////////
+
+  // three property tests:
+
+  it should "satisfy x.map(id) == x (10)" in check {
+
+    val id_addition = (x:Int) => x + 0
+
+    val id_multiplication = (x:Int) => 1 * x
+
+    val id_append = (x:String) => x + ""
+
+    ("addition identity" |: Prop.forAll(genNonEmptyStream[Int]) {
+      (s :Stream[Int]) => (s.map(id_addition).toList == s.toList) } )
+
+    ("multiplication identity" |: Prop.forAll(genNonEmptyStream[Int]) {
+      (s :Stream[Int]) => (s.map(id_multiplication).toList == s.toList) } )
+
+    ("append identity" |: Prop.forAll(genNonEmptyStream[String]) {
+      (s :Stream[String]) => (s.map(id_append).toList == s.toList) } )
+    
+  }
 
   // TODO
 
