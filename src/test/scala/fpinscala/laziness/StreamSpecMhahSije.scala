@@ -18,12 +18,12 @@ import scala.language.postfixOps
 
 // If you comment out all the import lines below, then you test the Scala
 // Standard Library implementation of Streams. Interestingly, the standard
-// library streams are stricter than those from the book, so some laziness tests
-// fail on them :)
+// library streams are stricter than those from the book, so some laziness
+// tests fail on them :)
 
-import stream00._    // uncomment to test the book solution
-// import stream01._ // uncomment to test the broken headOption implementation
-// import stream02._ // uncomment to test another version that breaks headOption
+import stream00._    // to test the book solution
+// import stream01._ // to test the broken headOption implementation
+// import stream02._ // to test another version that breaks headOption
 
 
 class StreamSpecMhahSije extends FlatSpec with Checkers {
@@ -33,13 +33,16 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
   // a few unused examples how to generate random things
   val evenInteger = Arbitrary.arbitrary[Int] suchThat (_ % 2 == 0)
 
-  implicit lazy val arbBool: Arbitrary[Boolean] = Arbitrary(Gen.oneOf(true, false))
-
+  implicit lazy val arbBool: Arbitrary[Boolean] = {
+    Arbitrary(Gen.oneOf(true, false))
+  }
 
   // An example generator of random finite non-empty streams
-  def list2stream[A] (la :List[A]): Stream[A] = la.foldRight (empty[A]) (cons[A](_,_))
+  def list2stream[A] (la :List[A]): Stream[A] =
+    la.foldRight (empty[A]) (cons[A](_,_))
 
-  // In ScalaTest we use the check method to switch to ScalaCheck's internal DSL
+  // In ScalaTest we use the check method to switch to ScalaCheck's
+  // internal DSL
   def genNonEmptyStream[A] (implicit arbA :Arbitrary[A]) :Gen[Stream[A]] =
     for { la <- arbitrary[List[A]] suchThat (_.nonEmpty)}
     yield list2stream (la)
@@ -58,7 +61,7 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
   // a scenario test:
 
   it should "return None on an empty Stream (01)" in {
-    assert(empty.headOption == None)
+    assert(empty.headOption.isEmpty)
   }
   
   // a property test:
@@ -67,9 +70,9 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
     // the implict makes the generator available in the context
     implicit def arbIntStream = Arbitrary[Stream[Int]] (genNonEmptyStream[Int])
     ("singleton" |:
-      Prop.forAll { (n :Int) => cons (n,empty).headOption == Some (n) } ) &&
+      Prop.forAll { (n :Int) => cons(n, empty).headOption.contains(n) } ) &&
     ("random" |:
-      Prop.forAll { (s :Stream[Int]) => s.headOption != None } )
+      Prop.forAll { (s :Stream[Int]) => s.headOption.isDefined } )
 
   }
 
@@ -77,7 +80,8 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   it should "not force the tail of the stream (03)" in {
     
-    val s = cons(0, cons(throw new RuntimeException("this has been forced"), empty))
+    val s =
+      cons(0, cons(throw new RuntimeException("this has been forced"), empty))
 
     try { 
 
@@ -100,7 +104,8 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   // a scenario test:
 
-    it should "not force any heads nor any tails of the Stream it manipulates (04)" in {
+    it should "not force any heads nor any tails of the " +
+      "Stream it manipulates (04)" in {
     
     val s = cons(throw new RuntimeException("this has been forced"), 
             cons(throw new RuntimeException("this has been forced"), empty))
@@ -135,7 +140,8 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
      
      } catch {
      
-      // if there is anything thrown, then some element after the n'th was forced
+      // if there is anything thrown, then some element after the n'th was
+      // forced
       case _ : Throwable => assert(false)
      
      }
@@ -143,12 +149,14 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   // a property test:
 
-  it should "satisfy s.take(n).take(n) == s.take(n) for any Stream s and any n (06)" in check {
+  it should "satisfy s.take(n).take(n) == s.take(n) " +
+    "for any Stream s and any n (06)" in check {
 
     implicit def arbIntStream = Arbitrary[Stream[Int]] (genNonEmptyStream[Int])
 
-    ("idempotency" |: 
-      Prop.forAll { (s :Stream[Int], n:Int) => s.take(n).take(n).toList == s.take(n).toList } )
+    "idempotency" |:
+      Prop.forAll {
+        (s :Stream[Int], n:Int) => s.take(n).take(n).toList == s.take(n).toList }
   }
 
 
@@ -160,8 +168,9 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   it should "satisfy s.drop(n).drop(m) == s.drop(n+m) for any n, m (07)" in check {
 
-    ("additivity" |: Prop.forAll(genNonEmptyStream[Int], genInt[Int], genInt[Int]) {
-      (s :Stream[Int], m:Int, n:Int) => (s.drop(n).drop(m).toList == s.drop(n+m).toList) } )
+    "additivity" |:
+      Prop.forAll(genNonEmptyStream[Int], genInt[Int](), genInt[Int]()) {
+      (s :Stream[Int], m:Int, n:Int) => s.drop(n).drop(m).toList == s.drop(n+m).toList }
     
   }
 
@@ -226,14 +235,14 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
     val id_append = (x:String) => x + ""
 
-    ("addition identity" |: Prop.forAll(genNonEmptyStream[Int]) {
-      (s :Stream[Int]) => (s.map(id_addition).toList == s.toList) } )
+    "addition identity" |: Prop.forAll(genNonEmptyStream[Int]) {
+      (s :Stream[Int]) => s.map(id_addition).toList == s.toList }
 
-    ("multiplication identity" |: Prop.forAll(genNonEmptyStream[Int]) {
-      (s :Stream[Int]) => (s.map(id_multiplication).toList == s.toList) } )
+    "multiplication identity" |: Prop.forAll(genNonEmptyStream[Int]) {
+      (s :Stream[Int]) => s.map(id_multiplication).toList == s.toList }
 
-    ("append identity" |: Prop.forAll(genNonEmptyStream[String]) {
-      (s :Stream[String]) => (s.map(id_append).toList == s.toList) } )
+    "append identity" |: Prop.forAll(genNonEmptyStream[String]) {
+      (s :Stream[String]) => s.map(id_append).toList == s.toList }
     
   }
 
@@ -268,8 +277,8 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
   
   it should "satisfy x.append(empty) == x (12)" in check {
 
-    ("empty" |: Prop.forAll(genNonEmptyStream[Int]) {
-      (s :Stream[Int]) => (s.append(empty).toList == s.toList) } )
+    "empty" |: Prop.forAll(genNonEmptyStream[Int]) {
+      (s :Stream[Int]) => s.append(empty).toList == s.toList }
     
   }
 
@@ -277,8 +286,9 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
   
   it should "satisfy x.append(y).take(x.toList.size) == x (13)" in check {
 
-    ("empty" |: Prop.forAll(genNonEmptyStream[Int], genNonEmptyStream[Int]) {
-      (x :Stream[Int], y :Stream[Int])  => (x.append(y).take(x.toList.size).toList == x.toList) } )
+    "empty" |: Prop.forAll(genNonEmptyStream[Int], genNonEmptyStream[Int]) {
+      (x :Stream[Int], y :Stream[Int])  =>
+        x.append(y).take(x.toList.size).toList == x.toList }
     
   }
 
@@ -286,15 +296,17 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
   
   it should "satisfy x.append(y).drop(x.toList.size) == y (14)" in check {
 
-    ("empty" |: Prop.forAll(genNonEmptyStream[Int], genNonEmptyStream[Int]) {
-      (x :Stream[Int], y :Stream[Int])  => (x.append(y).drop(x.toList.size).toList == y.toList) } )
+    "empty" |: Prop.forAll(genNonEmptyStream[Int], genNonEmptyStream[Int]) {
+      (x :Stream[Int], y :Stream[Int])  =>
+        x.append(y).drop(x.toList.size).toList == y.toList }
     
   }
 
   // a scenario test:
   
   it should "append one stream to the end of the another stream (15)" in {
-    assert(from(0).take(5).append(from(0).drop(5).take(5)).toList == from(0).take(10).toList)
+    assert(from(0).take(5).append(from(0).drop(5).take(5)).toList ==
+      from(0).take(10).toList)
   }
 
 }
