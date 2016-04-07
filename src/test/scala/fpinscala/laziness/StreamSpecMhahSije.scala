@@ -273,12 +273,28 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
     
   }
 
-  // a scenario test:
+  // a property test:
   
-  it should "append one stream to the end of the another stream" in {
-    assert(from(0).take(5).append(from(0).drop(5).take(5)).toList == from(0).take(10).toList)
+  it should "satisfy x.append(y).take(x.toList.size) == x (13)" in check {
+
+    ("empty" |: Prop.forAll(genNonEmptyStream[Int], genNonEmptyStream[Int]) {
+      (x :Stream[Int], y :Stream[Int])  => (x.append(y).take(x.toList.size).toList == x.toList) } )
+    
   }
 
-  // TODO: add more tests
+  // a property test:
+  
+  it should "satisfy x.append(y).drop(x.toList.size) == y (14)" in check {
+
+    ("empty" |: Prop.forAll(genNonEmptyStream[Int], genNonEmptyStream[Int]) {
+      (x :Stream[Int], y :Stream[Int])  => (x.append(y).drop(x.toList.size).toList == y.toList) } )
+    
+  }
+
+  // a scenario test:
+  
+  it should "append one stream to the end of the another stream (15)" in {
+    assert(from(0).take(5).append(from(0).drop(5).take(5)).toList == from(0).take(10).toList)
+  }
 
 }
