@@ -181,6 +181,31 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
      }
   }
 
+  // a scenario test:
+
+  it should "(08) should hold even if we force some stuff in the tail (09)" in {
+    
+    val s = cons(throw new RuntimeException("this has been forced"), 
+            cons(1,
+            cons(2,
+            cons(3,
+            cons(4,
+            cons(5, empty))))))
+
+    try { 
+
+      s.drop(1).toList
+      // just try to call drop and force the tail
+      // if no Exception is thrown, everything is fine
+     
+     } catch {
+     
+      // if there is anything thrown, then the tail was forced
+      case _ : Throwable => assert(false)
+     
+     }
+  }
+
 
   /////////////////
   behavior of "map"
