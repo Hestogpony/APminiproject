@@ -273,6 +273,12 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
     
   }
 
+  // a scenario test:
+  
+  it should "append one stream to the end of the another stream" in {
+    assert(from(0).take(5).append(from(0).drop(5).take(5)).toList == from(0).take(10).toList)
+  }
+
   // TODO: add more tests
 
 }
