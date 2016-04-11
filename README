@@ -70,7 +70,7 @@ For drop:
 - the above should hold even if we force some stuff in the tail 	// done! (scenario)
 
 For map:
-- x.map(id) == x (where id is the identity function)				// done! (property) I think
+- x.map(id) == x (where id is the identity function)				// done! (property)
 - map terminates on infinite streams 								// done! (scenario)
 
 For append:

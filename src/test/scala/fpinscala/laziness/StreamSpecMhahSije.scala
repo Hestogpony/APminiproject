@@ -233,20 +233,26 @@ class StreamSpecMhahSije extends FlatSpec with Checkers {
 
   it should "satisfy x.map(id) == x (10)" in check {
 
-    val id_addition = (x:Int) => x + 0
+    // val id_addition = (x:Int) => x + 0
 
-    val id_multiplication = (x:Int) => 1 * x
+    // val id_multiplication = (x:Int) => 1 * x
 
-    val id_append = (x:String) => x + ""
+    // val id_append = (x:String) => x + ""
 
-    "addition identity" |: Prop.forAll(genNonEmptyStream[Int]) {
-      (s :Stream[Int]) => s.map(id_addition).toList == s.toList }
+    // "addition identity" |: Prop.forAll(genNonEmptyStream[Int]) {
+    //   (s :Stream[Int]) => s.map(id_addition).toList == s.toList }
 
-    "multiplication identity" |: Prop.forAll(genNonEmptyStream[Int]) {
-      (s :Stream[Int]) => s.map(id_multiplication).toList == s.toList }
+    // "multiplication identity" |: Prop.forAll(genNonEmptyStream[Int]) {
+    //   (s :Stream[Int]) => s.map(id_multiplication).toList == s.toList }
 
-    "append identity" |: Prop.forAll(genNonEmptyStream[String]) {
-      (s :Stream[String]) => s.map(id_append).toList == s.toList }
+    // "identity" |: Prop.forAll(genNonEmptyStream[String]) {
+    //   (s :Stream[String]) => s.map(id_append).toList == s.toList }
+
+    "int identity" |: Prop.forAll(genNonEmptyStream[Int]) {
+      (s :Stream[Int]) => s.map(identity).toList == s.toList }
+
+    "string identity" |: Prop.forAll(genNonEmptyStream[String]) {
+      (s :Stream[String]) => s.map(identity).toList == s.toList }
     
   }
 
